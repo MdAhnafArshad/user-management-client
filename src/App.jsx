@@ -1,33 +1,78 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
+
+import { useEffect } from 'react';
+import { useState } from 'react';
 import './App.css'
 
 function App() {
-  const [count, setCount] = useState(0)
+  
+  const [users, setUser] = useState([])
+
+ useEffect(()=>{
+  fetch('http://localhost:3030/users')
+    .then(res => res.json())
+    .then(data => setUser(data))
+    .catch(err => console.error(err))
+ }, [])
+
+  
+  console.log(users);
+
+  const handleSubmit = event => {
+    event.preventDefault();
+    const form = event.target;
+    const name = form.name.value;
+    const email = form.email.value;
+    const password = form.password.value;
+    const user  = {name, email, password}
+
+
+
+
+    console.log(user);
+
+    fetch('http://localhost:3030/users',{
+      method: 'POST',
+      headers:{
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(user),
+    })
+    .then(res => res.json())
+    .then(data => {
+      const newUser = [...users, data]
+      setUser(newUser)
+      console.log('set New user', newUser);
+
+    })
+    
+    
+
+    form.reset();
+  }
 
   return (
     <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
+      
       <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
+        User management system.Length is   __
+        {
+          users.length
+        }
       </p>
+
+      <form onSubmit={handleSubmit}  className='form'>
+        <h1>From CLient....</h1>
+        <input type="text" name='name'   placeholder='name' />
+        <input type="email" name='email'   placeholder='email' />
+        <input type="password" name='password' placeholder='password' />
+        <input type="submit" className='submit' value='add user' />
+      </form>
+
+      <div>
+        {
+          users.map(res => <p key={res.id}>{res.id}: {res.name}: {res.email}</p>)
+        }
+      </div>
     </>
   )
 }

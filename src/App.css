@@ -38,5 +38,30 @@
 }
 
 .read-the-docs {
-  color: #888;
+  font-size: xx-large;
+  font-weight: bolder;
+
+}
+
+
+.form{
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+input{
+  padding: 10px;
+  margin: 5px;
+}
+
+.submit{
+  border: 1px solid black;
+}
+
+.submit:hover{
+  background-color: black;
+  color: aliceblue;
+  border: none;
+  border: 1px solid whitesmoke;
 }
